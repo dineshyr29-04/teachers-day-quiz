@@ -1,26 +1,187 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------------------------------------------------------------------
+   Pen & Notebook Design System
+   A tactile, solid-colored Teachers' Day theme: lined notebook paper, red margins,
+   solid ink borders, sticky-note cards, and snappy paper drop-shadows.
+   NO GRADIENTS -- clean, bold, solid colors and tactile micro-interactions.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-paper-light: #ffffff;
+  --color-paper-warm: #fffdf8;
+  --color-paper-cream: #faf7f0;
+
+  --color-ink: #2a2440;
+  --color-ink-soft: #544d69;
+  --color-ink-faint: #8e87a3;
+
+  --color-notebook-rule: #a4c2f4;
+  --color-notebook-margin: #e53935;
+
+  /* Solid Pen & Chalk Accent Colors */
+  --color-pen-red: #d32f2f;
+  --color-pen-blue: #1976d2;
+  --color-pen-yellow: #fbc02d;
+  --color-pen-green: #388e3c;
+  --color-pen-purple: #7b1fa2;
+
+  /* Solid Sticky Note Family */
+  --color-note-yellow: #fff59d;
+  --color-note-mint: #c8e6c9;
+  --color-note-lavender: #d1c4e9;
+  --color-note-peach: #ffe0b2;
+  --color-note-rose: #f8bbd0;
+
+  --font-display: var(--font-fraunces), 'Iowan Old Style', Georgia, serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-card: 1.25rem;
+  --radius-pill: 999px;
+
+  --shadow-paper: 4px 4px 0px #2a2440;
+  --shadow-paper-lg: 6px 6px 0px #2a2440;
+  --shadow-paper-sm: 2px 2px 0px #2a2440;
+
+  --animate-float-slow: float-slow 10s ease-in-out infinite;
+  --animate-float-mid: float-mid 7s ease-in-out infinite;
+  --animate-wiggle: wiggle 0.4s ease-in-out;
+  --animate-pop: pop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -12px, 0) rotate(2deg); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes float-mid {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+  50% { transform: translate3d(0, -8px, 0) rotate(3deg); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@layer base {
+  * {
+    border-color: #2a2440;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-paper-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-note-yellow);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-pen-blue);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Lined Notebook Paper Background with Left Red Margin */
+  .notebook-paper {
+    background-color: var(--color-paper-cream);
+    background-image: 
+      linear-gradient(90deg, transparent 48px, rgba(229, 57, 53, 0.35) 48px, rgba(229, 57, 53, 0.35) 50px, transparent 50px),
+      linear-gradient(to bottom, transparent 31px, rgba(63, 116, 192, 0.15) 31px, rgba(63, 116, 192, 0.15) 32px);
+    background-size: 100% 100%, 100% 32px;
+  }
+
+  /* Notebook Card: Solid paper fill, dark ink border, offset paper drop shadow */
+  .notebook-card {
+    background-color: var(--color-paper-light);
+    border: 2.5px solid var(--color-ink);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-paper);
+  }
+
+  .notebook-card-interactive {
+    background-color: var(--color-paper-light);
+    border: 2.5px solid var(--color-ink);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-paper);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .notebook-card-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-paper-lg);
+  }
+
+  .notebook-card-interactive:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-paper-sm);
+  }
+
+  /* Sticky Note Styling */
+  .sticky-note-yellow {
+    background-color: var(--color-note-yellow);
+    border: 2px solid var(--color-ink);
+    box-shadow: var(--shadow-paper);
+  }
+
+  .sticky-note-mint {
+    background-color: var(--color-note-mint);
+    border: 2px solid var(--color-ink);
+    box-shadow: var(--shadow-paper);
+  }
+
+  .sticky-note-lavender {
+    background-color: var(--color-note-lavender);
+    border: 2px solid var(--color-ink);
+    box-shadow: var(--shadow-paper);
+  }
+
+  .sticky-note-rose {
+    background-color: var(--color-note-rose);
+    border: 2px solid var(--color-ink);
+    box-shadow: var(--shadow-paper);
+  }
+
+  /* Blackboard Surface for Host / Projector Screens */
+  .chalkboard-solid {
+    background-color: #1e2a38;
+    color: #f2f6f5;
+    border: 3px solid #0f172a;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
 }
