@@ -1,0 +1,32 @@
+import type { NextRequest } from 'next/server'
+import { clientIp, fail, ok, rateLimit, readJson } from '@/lib/api-helpers'
+import { getEngine } from '@/lib/engine'
+import { sanitizeName } from '@/lib/utils'
+
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+/** Register a participant. No account, no email -- just a display name. */
+export async function POST(req: NextRequest) {
+  if (!rateLimit(`join:${clientIp(req)}`, 20, 60_000)) {
+    return fail('Too many attempts. Please wait a moment and try again.', 429)
+  }
+
+  const body = await readJson<{ name?: unknown }>(req)
+  const name = sanitizeName(body?.name)
+  if (name.length < 2) {
+    return fail('Please enter a name with at least 2 characters.')
+  }
+
+  const engine = getEngine()
+  const result = engine.join(name)
+  if ('error' in result) return fail(result.error, 409)
+
+  return ok({
+    participantId: result.id,
+    avatarSeed: result.avatarSeed,
+    name,
+    runId: engine.getRunId(),
+    quizName: engine.getQuiz().name,
+  })
+}
