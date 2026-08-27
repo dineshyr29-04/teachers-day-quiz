@@ -13,6 +13,7 @@ export function AdminQuizClient() {
   const [defaultTimer, setDefaultTimer] = useState(20)
   const [revealSeconds, setRevealSeconds] = useState(5)
   const [leaderboardSeconds, setLeaderboardSeconds] = useState(5)
+  const [applyToAll, setApplyToAll] = useState(true)
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -41,6 +42,7 @@ export function AdminQuizClient() {
         defaultTimer,
         revealSeconds,
         leaderboardSeconds,
+        applyToAll,
       })
       setQuiz(res.quiz)
       setSavedSuccess(true)
@@ -97,7 +99,7 @@ export function AdminQuizClient() {
         </div>
 
         {/* Default Timer */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <label className="block text-xs font-black uppercase text-ink-soft">
             Default Question Timer
           </label>
@@ -117,6 +119,16 @@ export function AdminQuizClient() {
               </button>
             ))}
           </div>
+
+          <label className="flex items-center gap-2 pt-1.5 cursor-pointer text-xs font-bold text-ink">
+            <input
+              type="checkbox"
+              checked={applyToAll}
+              onChange={(e) => setApplyToAll(e.target.checked)}
+              className="w-4 h-4 rounded border-2 border-ink text-[#7b1fa2] focus:ring-0 cursor-pointer"
+            />
+            <span>Apply this timer duration ({defaultTimer}s) to all existing questions</span>
+          </label>
         </div>
 
         {/* Transition Durations */}

@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { fail, ok, readJson } from '@/lib/api-helpers'
 import { requireAdminApi } from '@/lib/auth'
-import { getQuiz, updateQuiz } from '@/lib/content'
+import { getQuiz, updateQuiz, updateAllQuestionsTimer } from '@/lib/content'
 import { getEngine } from '@/lib/engine'
 import { TIMER_CHOICES } from '@/lib/types'
 import { clamp } from '@/lib/utils'
@@ -36,7 +36,6 @@ export async function PUT(req: NextRequest) {
 
   const quiz = getQuiz()
 
-  // `readySeconds` may legitimately be 0, so a `||` fallback would be wrong.
   const num = (value: unknown, fallback: number) => {
     const n = Number(value)
     return Number.isFinite(n) ? n : fallback
@@ -50,6 +49,12 @@ export async function PUT(req: NextRequest) {
     leaderboardSeconds: clamp(num(body.leaderboardSeconds, quiz.leaderboardSeconds), 2, 20),
     readySeconds: clamp(num(body.readySeconds, quiz.readySeconds), 0, 10),
   })
+
+  // Apply default timer to all existing questions if requested or changed
+  const applyToAll = body.applyToAll !== undefined ? Boolean(body.applyToAll) : true
+  if (applyToAll) {
+    updateAllQuestionsTimer(quiz.id, defaultTimer)
+  }
 
   getEngine().refreshQuiz()
   return ok({ quiz: updated })

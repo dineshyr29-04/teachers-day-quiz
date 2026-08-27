@@ -405,10 +405,9 @@ class QuizEngine {
     return this.quiz
   }
 
-  /** Called after the admin edits quiz settings so new timings take effect. */
   refreshQuiz() {
     this.quiz = getQuiz()
-    if (this.phase === 'WAITING') this.loadQuestions()
+    this.loadQuestions()
   }
 
   /** Called after the admin edits questions while the run is still WAITING. */

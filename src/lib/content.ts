@@ -134,6 +134,12 @@ export function updateQuiz(
   return getQuiz()
 }
 
+export function updateAllQuestionsTimer(quizId: string, timerSeconds: number) {
+  getDb()
+    .prepare('UPDATE questions SET timer_seconds = ? WHERE quiz_id = ?')
+    .run(timerSeconds, quizId)
+}
+
 // ---------------------------------------------------------------------------
 // Questions
 // ---------------------------------------------------------------------------
