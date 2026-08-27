@@ -1,13 +1,62 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { GraduationCap, QrFrame, Star, PaperClip, Pencil, PencilScribble } from '@/components/icons'
+import { GraduationCap, QrFrame, PaperClip, Pencil, PencilScribble, Book } from '@/components/icons'
 import { getAdminRoute } from '@/lib/admin-route'
 import { motion } from 'framer-motion'
+import { RefreshCw } from 'lucide-react'
+
+const TEACHERS_DAY_QUOTES = [
+  {
+    quote: "Teaching is a very noble profession that shapes the character, caliber, and future of an individual.",
+    author: "Dr. A.P.J. Abdul Kalam",
+  },
+  {
+    quote: "Teachers should be the best minds in the country.",
+    author: "Dr. Sarvepalli Radhakrishnan",
+  },
+  {
+    quote: "Education is the manifestation of the perfection already in man.",
+    author: "Swami Vivekananda",
+  },
+  {
+    quote: "Education is the most powerful weapon which you can use to change the world.",
+    author: "Nelson Mandela",
+  },
+  {
+    quote: "It is the supreme art of the teacher to awaken joy in creative expression and knowledge.",
+    author: "Albert Einstein",
+  },
+  {
+    quote: "One child, one teacher, one book, one pen can change the world.",
+    author: "Malala Yousafzai",
+  },
+  {
+    quote: "A good teacher can inspire hope, ignite the imagination, and instil a love of learning.",
+    author: "Brad Henry",
+  },
+  {
+    quote: "The mind is not a vessel to be filled, but a fire to be kindled.",
+    author: "Plutarch",
+  },
+]
 
 export default function HomePage() {
   const secretRoute = getAdminRoute()
+  const [quoteIndex, setQuoteIndex] = useState(0)
+
+  // Pick a random quote on mount
+  useEffect(() => {
+    setQuoteIndex(Math.floor(Math.random() * TEACHERS_DAY_QUOTES.length))
+  }, [])
+
+  const handleNextQuote = () => {
+    setQuoteIndex((prev) => (prev + 1) % TEACHERS_DAY_QUOTES.length)
+  }
+
+  const currentQuote = TEACHERS_DAY_QUOTES[quoteIndex]
 
   return (
     <main className="min-h-screen notebook-paper flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden">
@@ -75,19 +124,6 @@ export default function HomePage() {
         <GraduationCap className="w-16 h-16 stroke-[2.2]" />
       </motion.div>
 
-      {/* Side Floating Sticky Note Accents */}
-      <div className="absolute top-1/3 left-6 sticky-note-yellow p-4 rounded-xl border-2 border-ink shadow-[3px_3px_0px_#2a2440] -rotate-6 hidden xl:block w-44 text-left">
-        <PaperClip className="w-4 h-4 text-ink mb-1" />
-        <p className="text-xs font-black text-ink">Campus Event</p>
-        <p className="text-[10px] font-bold text-ink-soft">Honoring Teachers</p>
-      </div>
-
-      <div className="absolute top-1/2 right-6 sticky-note-lavender p-4 rounded-xl border-2 border-ink shadow-[3px_3px_0px_#2a2440] rotate-6 hidden xl:block w-44 text-left">
-        <PaperClip className="w-4 h-4 text-ink mb-1" />
-        <p className="text-xs font-black text-ink">Live Rankings</p>
-        <p className="text-[10px] font-bold text-ink-soft">Top 10 Leaders</p>
-      </div>
-
       {/* Main Content Container */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -111,7 +147,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Main Hero Card */}
+        {/* Main Hero Card (Join Quiz Action Only) */}
         <div className="w-full notebook-card p-5 sm:p-6 space-y-5">
           {/* Banner Illustration */}
           <div className="w-full overflow-hidden rounded-xl border-2 border-ink bg-white relative aspect-[4/3] shadow-[2px_2px_0px_#2a2440]">
@@ -124,25 +160,48 @@ export default function HomePage() {
             />
           </div>
 
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <Link
-              href="/join"
-              className="w-full py-3.5 px-6 rounded-2xl bg-[#7b1fa2] text-white font-black text-base border-2 border-ink shadow-[4px_4px_0px_#2a2440] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2"
-            >
-              <QrFrame className="w-5 h-5" />
-              <span>Join Live Quiz</span>
-            </Link>
-
-            <Link
-              href="/leaderboard"
-              className="w-full py-3 px-6 rounded-2xl sticky-note-yellow text-ink font-black text-sm border-2 border-ink shadow-[2px_2px_0px_#2a2440] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
-            >
-              <Star className="w-4 h-4 fill-current text-[#d32f2f]" />
-              <span>View Leaderboard</span>
-            </Link>
-          </div>
+          {/* Primary Join Action Button */}
+          <Link
+            href="/join"
+            className="w-full py-4 px-6 rounded-2xl bg-[#7b1fa2] text-white font-black text-lg border-2 border-ink shadow-[4px_4px_0px_#2a2440] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2.5"
+          >
+            <QrFrame className="w-6 h-6" />
+            <span>Join Live Quiz</span>
+          </Link>
         </div>
+
+        {/* Randomized Teachers' Day Quote Sticky Note Card */}
+        <motion.div
+          key={quoteIndex}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="w-full sticky-note-yellow p-5 rounded-2xl border-2 border-ink shadow-[4px_4px_0px_#2a2440] space-y-3 text-left relative -rotate-1"
+        >
+          <div className="flex items-center justify-between">
+            <div className="inline-flex items-center gap-1.5 text-xs font-black text-ink uppercase tracking-wider">
+              <Book className="w-4 h-4 text-[#d32f2f]" />
+              <span>Teachers' Day Quote</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleNextQuote}
+              title="Next Quote"
+              className="p-1.5 rounded-lg bg-paper-cream border border-ink text-ink hover:bg-paper-light transition-all cursor-pointer shadow-[1px_1px_0px_#2a2440]"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <p className="text-sm font-extrabold text-ink leading-snug italic">
+            "{currentQuote.quote}"
+          </p>
+
+          <p className="text-xs font-black text-[#7b1fa2] text-right">
+            — {currentQuote.author}
+          </p>
+        </motion.div>
 
         {/* Footer Host Link */}
         <div className="text-xs font-bold text-ink-soft">
