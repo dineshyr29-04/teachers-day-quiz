@@ -408,6 +408,7 @@ class QuizEngine {
   refreshQuiz() {
     this.quiz = getQuiz()
     this.loadQuestions()
+    this.broadcastState()
   }
 
   /** Called after the admin edits questions while the run is still WAITING. */

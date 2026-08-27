@@ -13,7 +13,6 @@ export function AdminQuizClient() {
   const [defaultTimer, setDefaultTimer] = useState(20)
   const [revealSeconds, setRevealSeconds] = useState(5)
   const [leaderboardSeconds, setLeaderboardSeconds] = useState(5)
-  const [applyToAll, setApplyToAll] = useState(true)
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -29,26 +28,38 @@ export function AdminQuizClient() {
         setRevealSeconds(res.quiz.revealSeconds)
         setLeaderboardSeconds(res.quiz.leaderboardSeconds)
       })
+      .catch((err: unknown) => {
+        console.error('Failed to load quiz settings:', err)
+      })
       .finally(() => setLoading(false))
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!name.trim()) {
+      alert('Please provide a quiz title.')
+      return
+    }
+
     try {
       setSaving(true)
       const res = await apiPut<{ quiz: Quiz }>('/api/admin/quiz', {
-        name,
-        description,
-        defaultTimer,
-        revealSeconds,
-        leaderboardSeconds,
-        applyToAll,
+        name: name.trim(),
+        description: description.trim(),
+        defaultTimer: Number(defaultTimer) || 20,
+        revealSeconds: Number(revealSeconds) || 5,
+        leaderboardSeconds: Number(leaderboardSeconds) || 5,
       })
       setQuiz(res.quiz)
+      setName(res.quiz.name)
+      setDescription(res.quiz.description)
+      setDefaultTimer(res.quiz.defaultTimer)
+      setRevealSeconds(res.quiz.revealSeconds)
+      setLeaderboardSeconds(res.quiz.leaderboardSeconds)
       setSavedSuccess(true)
       setTimeout(() => setSavedSuccess(false), 3000)
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Update failed')
+      alert(err instanceof Error ? err.message : 'Failed to update quiz settings.')
     } finally {
       setSaving(false)
     }
@@ -134,7 +145,7 @@ export function AdminQuizClient() {
               <input
                 type="number"
                 min={2}
-                max={20}
+                max={60}
                 value={revealSeconds}
                 onChange={(e) => setRevealSeconds(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl border-2 border-ink bg-paper-cream text-ink font-bold text-sm"
@@ -151,7 +162,7 @@ export function AdminQuizClient() {
               <input
                 type="number"
                 min={2}
-                max={20}
+                max={60}
                 value={leaderboardSeconds}
                 onChange={(e) => setLeaderboardSeconds(Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl border-2 border-ink bg-paper-cream text-ink font-bold text-sm"
@@ -164,7 +175,7 @@ export function AdminQuizClient() {
         {savedSuccess && (
           <div className="p-3 rounded-xl sticky-note-mint font-extrabold text-xs flex items-center gap-2 text-ink">
             <Check className="w-4 h-4 text-[#388e3c]" />
-            <span>Quiz settings updated successfully!</span>
+            <span>Quiz settings updated and live engine synchronized!</span>
           </div>
         )}
 
@@ -174,7 +185,7 @@ export function AdminQuizClient() {
           className="w-full py-3.5 rounded-xl bg-[#7b1fa2] text-white font-black text-sm border-2 border-ink shadow-[3px_3px_0px_#2a2440] hover:-translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
-          <span>{saving ? 'Saving...' : 'Save Configuration'}</span>
+          <span>{saving ? 'Saving Settings...' : 'Save Configuration'}</span>
         </button>
       </form>
     </div>
