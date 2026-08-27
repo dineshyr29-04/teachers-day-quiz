@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   GraduationCap,
   QrFrame,
@@ -14,7 +15,6 @@ import {
   CompassRulerDoodle,
   DoodleStars,
   ThumbtackPin,
-  Chalkboard,
 } from '@/components/icons'
 import { getAdminRoute } from '@/lib/admin-route'
 import { motion } from 'framer-motion'
@@ -155,31 +155,17 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Clean Hero Card (No image boxes) */}
-        <div className="w-full notebook-card p-6 sm:p-8 space-y-6 relative overflow-hidden bg-[#fffdf7]">
-          {/* Blackboard Header Badge */}
-          <div className="w-full py-4 px-4 rounded-xl bg-[#2A2440] text-white border-2 border-ink shadow-[2px_2px_0px_#2a2440] flex items-center justify-center gap-3">
-            <Chalkboard className="w-6 h-6 text-amber-300 shrink-0" />
-            <div className="text-left">
-              <p className="text-xs font-black uppercase text-amber-300 tracking-wider">Live Quiz Arena</p>
-              <p className="text-sm font-bold text-white">Campus Quiz Challenge</p>
-            </div>
-          </div>
-
-          {/* Quick Step Guide */}
-          <div className="grid grid-cols-3 gap-2 text-center text-xs font-black text-ink">
-            <div className="p-2.5 rounded-xl bg-paper-cream border border-ink shadow-[1px_1px_0px_#2a2440]">
-              <span className="text-[#7b1fa2] text-sm font-black block">1. Enter Name</span>
-              <span className="text-[10px] text-ink-soft">Join game</span>
-            </div>
-            <div className="p-2.5 rounded-xl bg-paper-cream border border-ink shadow-[1px_1px_0px_#2a2440]">
-              <span className="text-[#7b1fa2] text-sm font-black block">2. Tap Choice</span>
-              <span className="text-[10px] text-ink-soft">Earn points</span>
-            </div>
-            <div className="p-2.5 rounded-xl bg-paper-cream border border-ink shadow-[1px_1px_0px_#2a2440]">
-              <span className="text-[#7b1fa2] text-sm font-black block">3. Climb Rank</span>
-              <span className="text-[10px] text-ink-soft">Win prize</span>
-            </div>
+        {/* Main Hero Card with Teachers' Day Banner Image */}
+        <div className="w-full notebook-card p-5 sm:p-6 space-y-5">
+          {/* Main Teachers' Day Banner Image */}
+          <div className="w-full overflow-hidden rounded-xl border-2 border-ink bg-white relative aspect-[4/3] shadow-[2px_2px_0px_#2a2440]">
+            <Image
+              src="/teachers_day_banner.png"
+              alt="Teachers' Day Celebration"
+              fill
+              priority
+              className="object-cover"
+            />
           </div>
 
           {/* Primary Join Action Button */}
@@ -192,7 +178,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Teachers' Day Quote Card (Without randomize button) */}
+        {/* Teachers' Day Quote Sticky Note Card */}
         <div className="w-full sticky-note-yellow p-5 rounded-2xl border-2 border-ink shadow-[4px_4px_0px_#2a2440] space-y-3 text-left relative -rotate-1">
           <div className="flex items-center justify-between">
             <div className="inline-flex items-center gap-1.5 text-xs font-black text-ink uppercase tracking-wider">
