@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  // better-sqlite3 is a native module: keep it out of the bundler.
+  serverExternalPackages: ['better-sqlite3'],
+  eslint: {
+    // Lint runs explicitly via `npm run lint`; don't block event-day builds on style.
+    ignoreDuringBuilds: true,
+  },
+}
 
-export default nextConfig;
+export default nextConfig
