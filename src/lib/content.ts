@@ -173,6 +173,8 @@ export type QuestionInput = Pick<
 
 export function createQuestion(quizId: string, input: QuestionInput): Question {
   const db = getDb()
+  const quiz = getQuiz()
+  const timerSeconds = input.timerSeconds && input.timerSeconds > 0 ? input.timerSeconds : quiz.defaultTimer
   const maxPos = db
     .prepare(
       'SELECT COALESCE(MAX(position), -1) AS pos FROM questions WHERE quiz_id = ?',
@@ -191,7 +193,7 @@ export function createQuestion(quizId: string, input: QuestionInput): Question {
     input.prompt,
     JSON.stringify(input.options),
     input.correctIndex,
-    input.timerSeconds,
+    timerSeconds,
     input.explanation,
     input.imageId,
     maxPos.pos + 1,
@@ -200,6 +202,8 @@ export function createQuestion(quizId: string, input: QuestionInput): Question {
 }
 
 export function updateQuestion(id: string, input: QuestionInput): Question | null {
+  const quiz = getQuiz()
+  const timerSeconds = input.timerSeconds && input.timerSeconds > 0 ? input.timerSeconds : quiz.defaultTimer
   getDb()
     .prepare(
       `UPDATE questions SET
@@ -212,7 +216,7 @@ export function updateQuestion(id: string, input: QuestionInput): Question | nul
       input.prompt,
       JSON.stringify(input.options),
       input.correctIndex,
-      input.timerSeconds,
+      timerSeconds,
       input.explanation,
       input.imageId,
       id,

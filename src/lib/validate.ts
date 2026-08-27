@@ -60,9 +60,9 @@ export function validateQuestion(
     return { ok: false, error: 'Pick which answer is correct.' }
   }
 
-  const timerSeconds = Number(draft.timerSeconds)
-  if (!TIMER_CHOICES.includes(timerSeconds as (typeof TIMER_CHOICES)[number])) {
-    return { ok: false, error: `Timer must be one of ${TIMER_CHOICES.join(', ')} seconds.` }
+  const timerSeconds = Number(draft.timerSeconds) || 20
+  if (Number.isNaN(timerSeconds) || timerSeconds < 1 || timerSeconds > 300) {
+    return { ok: false, error: 'Timer must be between 1 and 300 seconds.' }
   }
 
   const explanationRaw = typeof draft.explanation === 'string' ? draft.explanation.trim() : ''
