@@ -11,7 +11,6 @@ import {
   ThumbtackPin,
 } from '@/components/icons'
 import { NotebookBackgroundDecor } from '@/components/notebook-background-decor'
-import { getAdminRoute } from '@/lib/admin-route'
 import { motion } from 'framer-motion'
 
 const TEACHERS_DAY_QUOTES = [
@@ -50,7 +49,6 @@ const TEACHERS_DAY_QUOTES = [
 ]
 
 export default function HomePage() {
-  const secretRoute = getAdminRoute()
   const [quote, setQuote] = useState(TEACHERS_DAY_QUOTES[0])
 
   // Pick a random quote on mount
@@ -127,17 +125,6 @@ export default function HomePage() {
           <p className="text-xs font-black text-[#7b1fa2] text-right">
             — {quote.author}
           </p>
-        </div>
-
-        {/* Footer Host Link */}
-        <div className="text-xs font-bold text-ink-soft">
-          Event Host?{' '}
-          <Link
-            href={`/${secretRoute}/login`}
-            className="font-black text-ink underline hover:text-[#7b1fa2] transition-colors"
-          >
-            Access Host Console
-          </Link>
         </div>
       </motion.div>
     </main>
