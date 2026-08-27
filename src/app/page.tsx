@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { GraduationCap, QrFrame, Star, PaperClip } from '@/components/icons'
+import { GraduationCap, QrFrame, Star, PaperClip, Book, Pencil, Ruler } from '@/components/icons'
 import { getAdminRoute } from '@/lib/admin-route'
 import { motion } from 'framer-motion'
 
@@ -10,11 +10,71 @@ export default function HomePage() {
   const secretRoute = getAdminRoute()
 
   return (
-    <main className="min-h-screen notebook-paper flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none">
+    <main className="min-h-screen notebook-paper flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden">
+      {/* Background Floating Educational Doodle Assets */}
+      <motion.div
+        animate={{ y: [0, -14, 0], rotate: [0, 6, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-10 left-6 sm:left-12 opacity-85 pointer-events-none hidden md:block w-36 h-36"
+      >
+        <Image
+          src="/notebook_stationery_decor.png"
+          alt="Classroom Stationery Doodles"
+          width={140}
+          height={140}
+          className="object-contain drop-shadow-md"
+        />
+      </motion.div>
+
+      <motion.div
+        animate={{ y: [0, 16, 0], rotate: [0, -6, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-16 right-6 sm:right-12 opacity-85 pointer-events-none hidden md:block w-40 h-40"
+      >
+        <Image
+          src="/classroom_learning_hero.png"
+          alt="Learning Doodles"
+          width={160}
+          height={160}
+          className="object-contain rounded-2xl border-2 border-ink shadow-[4px_4px_0px_#2a2440]"
+        />
+      </motion.div>
+
+      {/* Floating Background Icons */}
+      <motion.div
+        animate={{ y: [0, -10, 0], rotate: [0, -5, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-16 left-10 text-[#d32f2f] opacity-80 pointer-events-none hidden lg:block"
+      >
+        <Pencil className="w-14 h-14 stroke-[2.2]" />
+      </motion.div>
+
+      <motion.div
+        animate={{ y: [0, 12, 0], rotate: [0, 5, 0] }}
+        transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-20 right-14 text-[#7b1fa2] opacity-80 pointer-events-none hidden lg:block"
+      >
+        <GraduationCap className="w-16 h-16 stroke-[2.2]" />
+      </motion.div>
+
+      {/* Side Floating Sticky Note Accent */}
+      <div className="absolute top-1/3 -left-4 sticky-note-yellow p-4 rounded-xl border-2 border-ink shadow-[3px_3px_0px_#2a2440] -rotate-6 hidden xl:block w-44 text-left">
+        <PaperClip className="w-4 h-4 text-ink mb-1" />
+        <p className="text-xs font-black text-ink">Campus Event</p>
+        <p className="text-[10px] font-bold text-ink-soft">Honoring Teachers</p>
+      </div>
+
+      <div className="absolute top-1/2 -right-4 sticky-note-lavender p-4 rounded-xl border-2 border-ink shadow-[3px_3px_0px_#2a2440] rotate-6 hidden xl:block w-44 text-left">
+        <PaperClip className="w-4 h-4 text-ink mb-1" />
+        <p className="text-xs font-black text-ink">Live Rankings</p>
+        <p className="text-[10px] font-bold text-ink-soft">Top 10 Leaders</p>
+      </div>
+
+      {/* Main Content Container */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md flex flex-col items-center space-y-6"
+        className="w-full max-w-md flex flex-col items-center space-y-6 z-10"
       >
         {/* Header Tag */}
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full sticky-note-yellow text-ink font-black text-xs uppercase tracking-wider -rotate-1 shadow-[2px_2px_0px_#2a2440]">
@@ -36,7 +96,7 @@ export default function HomePage() {
         {/* Main Hero Card */}
         <div className="w-full notebook-card p-5 sm:p-6 space-y-5">
           {/* Banner Illustration */}
-          <div className="w-full overflow-hidden rounded-xl border-2 border-ink bg-white relative aspect-[4/3]">
+          <div className="w-full overflow-hidden rounded-xl border-2 border-ink bg-white relative aspect-[4/3] shadow-[2px_2px_0px_#2a2440]">
             <Image
               src="/teachers_day_banner.png"
               alt="Teachers' Day Celebration"
