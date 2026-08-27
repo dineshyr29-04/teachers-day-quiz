@@ -10,8 +10,8 @@ export const runtime = 'nodejs'
  * server decides when it arrived, whether it counts, and what it is worth.
  */
 export async function POST(req: NextRequest) {
-  // Relax rate limit for large campus NAT / Wi-Fi deployment (up to 5,000 answer submissions per minute per IP)
-  if (!rateLimit(`answer:${clientIp(req)}`, 5000, 60_000)) {
+  const ip = clientIp(req)
+  if (ip !== 'unknown' && !rateLimit(`answer:${ip}`, 10000, 60_000)) {
     return fail('Too many requests.', 429)
   }
 
