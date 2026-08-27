@@ -4,7 +4,7 @@ import { useState } from 'react'
 import type { HostFrame } from '@/lib/types'
 import { apiPost } from '@/lib/client/api'
 import { ANSWER_SHAPES, Users, QrFrame, GraduationCap, PaperClip } from '@/components/icons'
-import { Play, Pause, SkipForward, Square, BarChart2 } from 'lucide-react'
+import { Play, Pause, SkipForward, Square, BarChart2, RotateCcw } from 'lucide-react'
 import { QrModal } from '@/components/qr-modal'
 
 interface HostControlsProps {
@@ -37,7 +37,7 @@ export function HostControls({ snapshot, liveTally }: HostControlsProps) {
   const currentAnswered = liveTally?.answered ?? snapshot.answered
   const currentSpread = liveTally?.spread ?? snapshot.spread
 
-  const handleAction = async (action: 'start' | 'pause' | 'resume' | 'skip' | 'end') => {
+  const handleAction = async (action: 'start' | 'pause' | 'resume' | 'skip' | 'end' | 'reset') => {
     try {
       setLoadingAction(action)
       await apiPost('/api/admin/control', { action })
@@ -50,7 +50,7 @@ export function HostControls({ snapshot, liveTally }: HostControlsProps) {
 
   return (
     <div className="w-full space-y-6 select-none">
-      {/* Top Banner: Quiz Name, Status, QR Button */}
+      {/* Top Banner: Quiz Name, Status, QR Button & Reset Button */}
       <div className="notebook-card p-6 border-2 border-ink space-y-4 shadow-[4px_4px_0px_#2a2440]">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-1">
@@ -64,22 +64,42 @@ export function HostControls({ snapshot, liveTally }: HostControlsProps) {
             </h1>
           </div>
 
-          {/* Large QR Code Trigger Button */}
-          <button
-            type="button"
-            onClick={() => setShowQr(true)}
-            className="px-5 py-3 rounded-2xl sticky-note-lavender border-2 border-ink text-ink font-black text-sm hover:-translate-y-0.5 transition-all cursor-pointer shadow-[3px_3px_0px_#2a2440] flex items-center gap-2.5"
-          >
-            <QrFrame className="w-6 h-6 text-[#7b1fa2]" />
-            <span>Display Join QR Code</span>
-          </button>
+          {/* Action Trigger Buttons */}
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setShowQr(true)}
+              className="px-5 py-3 rounded-2xl sticky-note-lavender border-2 border-ink text-ink font-black text-sm hover:-translate-y-0.5 transition-all cursor-pointer shadow-[3px_3px_0px_#2a2440] flex items-center gap-2"
+            >
+              <QrFrame className="w-5 h-5 text-[#7b1fa2]" />
+              <span>Display QR Code</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (
+                  confirm(
+                    'Resetting the game will remove all connected players and return the quiz to the waiting lobby. All questions and settings will remain unchanged. Proceed?',
+                  )
+                ) {
+                  handleAction('reset')
+                }
+              }}
+              disabled={loadingAction !== null}
+              className="px-5 py-3 rounded-2xl sticky-note-yellow border-2 border-ink text-ink font-black text-sm hover:-translate-y-0.5 transition-all cursor-pointer shadow-[3px_3px_0px_#2a2440] flex items-center gap-2 disabled:opacity-50"
+            >
+              <RotateCcw className="w-5 h-5 text-[#d32f2f]" />
+              <span>{loadingAction === 'reset' ? 'Resetting...' : 'Reset Event'}</span>
+            </button>
+          </div>
         </div>
 
         <div className="w-full border-t-2 border-ink" />
 
         {/* Live Status & Main Action Button */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             {/* Status Badge */}
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-ink sticky-note-mint text-xs font-black uppercase tracking-wider shadow-[2px_2px_0px_#2a2440]">
               <span
@@ -128,7 +148,7 @@ export function HostControls({ snapshot, liveTally }: HostControlsProps) {
 
           {/* Controls during live quiz */}
           {(isLive || isPaused) && (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {isPaused ? (
                 <button
                   type="button"

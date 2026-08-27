@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { apiGet } from '@/lib/client/api'
+import { apiGet, apiPost } from '@/lib/client/api'
 import { adminPath } from '@/lib/admin-route'
 import type { HostFrame } from '@/lib/types'
 import { useHostStream } from '@/lib/client/use-stream'
-import { Users, HelpCircle, Trophy, Target, Play, Edit, FileText, ArrowRight } from 'lucide-react'
+import { Users, HelpCircle, Trophy, Target, Play, Edit, FileText, ArrowRight, RotateCcw } from 'lucide-react'
 
 export function AdminDashboardClient() {
   const { snapshot } = useHostStream()
@@ -43,13 +43,37 @@ export function AdminDashboardClient() {
             </p>
           </div>
 
-          <Link
-            href={adminPath('live')}
-            className="px-6 py-3 rounded-xl bg-[#7b1fa2] text-white font-extrabold text-sm border-2 border-ink shadow-[3px_3px_0px_#2a2440] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2"
-          >
-            <Play className="w-4 h-4 fill-current" />
-            <span>Open Live Control</span>
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href={adminPath('live')}
+              className="px-6 py-3 rounded-xl bg-[#7b1fa2] text-white font-extrabold text-sm border-2 border-ink shadow-[3px_3px_0px_#2a2440] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              <span>Open Live Control</span>
+            </Link>
+
+            <button
+              type="button"
+              onClick={async () => {
+                if (
+                  confirm(
+                    'Resetting the game will remove all connected players and return the quiz to the waiting lobby. All questions and settings will remain unchanged. Proceed?',
+                  )
+                ) {
+                  try {
+                    await apiPost('/api/admin/control', { action: 'reset' })
+                    alert('Quiz reset successfully! Connected players removed.')
+                  } catch {
+                    alert('Failed to reset quiz.')
+                  }
+                }
+              }}
+              className="px-5 py-3 rounded-xl sticky-note-yellow text-ink font-extrabold text-sm border-2 border-ink shadow-[3px_3px_0px_#2a2440] hover:-translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <RotateCcw className="w-4 h-4 text-[#d32f2f]" />
+              <span>Reset Event</span>
+            </button>
+          </div>
         </div>
       </div>
 
