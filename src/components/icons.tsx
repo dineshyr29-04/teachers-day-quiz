@@ -304,3 +304,63 @@ export function PencilScribble(props: IconProps) {
     </Svg>
   )
 }
+
+export function PaperAirplaneDoodle(props: IconProps) {
+  return (
+    <Svg strokeWidth={2} {...props}>
+      <path d="M2 12l20-9-9 20-3-8-8-3z" />
+      <path d="M13 11l9-8" />
+      <path d="M3 18c4 3 8 1 11-2" strokeDasharray="2 3" />
+    </Svg>
+  )
+}
+
+export function MathFormulaDoodle(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 160 80" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      {/* E = mc^2 */}
+      <text x="10" y="25" fill="currentColor" stroke="none" fontSize="18" fontWeight="800" fontFamily="var(--font-jakarta), sans-serif">
+        E = mc²
+      </text>
+      {/* a^2 + b^2 = c^2 */}
+      <text x="15" y="55" fill="currentColor" stroke="none" fontSize="15" fontWeight="800" fontFamily="var(--font-jakarta), sans-serif">
+        a² + b² = c²
+      </text>
+      {/* pi and sqrt */}
+      <path d="M120 18h18M126 18v16M132 18v16" />
+      <path d="M110 50l4 8 6-18h16" />
+      <text x="124" y="55" fill="currentColor" stroke="none" fontSize="14" fontWeight="800">x</text>
+    </svg>
+  )
+}
+
+export function CompassRulerDoodle(props: IconProps) {
+  return (
+    <Svg strokeWidth={2} {...props}>
+      <circle cx="12" cy="5" r="2" />
+      <path d="M11 7l-5 14M13 7l5 14" />
+      <path d="M8 15h8" />
+    </Svg>
+  )
+}
+
+export function DoodleStars(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 100 100" fill="currentColor" aria-hidden="true" {...props}>
+      {/* Star 1 */}
+      <path d="M30 10l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" />
+      {/* Star 2 */}
+      <path d="M75 40l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" />
+      {/* Star 3 */}
+      <path d="M20 70l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" />
+    </svg>
+  )
+}
+
+export function ThumbtackPin(props: IconProps) {
+  return (
+    <Svg strokeWidth={2} {...props}>
+      <path d="M12 17v5M9 4h6M10 4v5l-3 3v2h10v-2l-3-3V4" />
+    </Svg>
+  )
+}
