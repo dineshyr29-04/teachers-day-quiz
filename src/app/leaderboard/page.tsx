@@ -57,8 +57,12 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Footer Banner */}
-      <footer className="w-full max-w-6xl mx-auto flex items-center justify-between text-xs sm:text-sm text-ink font-black border-t-2 border-ink pt-4 z-10">
-        <span>Happy Teachers' Day 🎓</span>
+      <footer className="w-full max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-ink font-black border-t-2 border-ink pt-4 z-10">
+        <div className="flex items-center gap-2">
+          <span>Happy Teachers' Day 🎓</span>
+          <span className="text-ink-soft">•</span>
+          <span className="text-ink-soft text-xs font-extrabold">Presented by <strong className="text-ink font-black">YENTECH</strong> (YSET)</span>
+        </div>
         <span className="tnum font-black text-[#7b1fa2]">
           {totalPlayers} Participants Online
         </span>

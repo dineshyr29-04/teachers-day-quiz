@@ -7,6 +7,7 @@ import { apiPost } from '@/lib/client/api'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { GraduationCap, ArrowUp, PaperClip } from '@/components/icons'
 import { NotebookBackgroundDecor } from '@/components/notebook-background-decor'
+import { YentechBranding } from '@/components/yentech-branding'
 import { motion } from 'framer-motion'
 
 export default function JoinPage() {
@@ -73,10 +74,13 @@ export default function JoinPage() {
       >
         {/* Header Branding */}
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full sticky-note-yellow text-ink font-black text-xs uppercase tracking-wider -rotate-1 shadow-[2.5px_2.5px_0px_#2a2440]">
-            <PaperClip className="w-4 h-4 text-ink" />
-            <GraduationCap className="w-4 h-4 text-ink" />
-            <span>Teachers' Day Quiz</span>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full sticky-note-yellow text-ink font-black text-xs uppercase tracking-wider -rotate-1 shadow-[2.5px_2.5px_0px_#2a2440]">
+              <PaperClip className="w-4 h-4 text-ink" />
+              <GraduationCap className="w-4 h-4 text-ink" />
+              <span>Teachers' Day Quiz</span>
+            </div>
+            <YentechBranding />
           </div>
           <h1 className="text-3xl font-black text-ink">
             Join the Celebration

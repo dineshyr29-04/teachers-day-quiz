@@ -11,6 +11,7 @@ import {
   ThumbtackPin,
 } from '@/components/icons'
 import { NotebookBackgroundDecor } from '@/components/notebook-background-decor'
+import { YentechBranding, YentechFooterCredit } from '@/components/yentech-branding'
 import { motion } from 'framer-motion'
 
 const TEACHERS_DAY_QUOTES = [
@@ -66,13 +67,16 @@ export default function HomePage() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md flex flex-col items-center space-y-3.5 sm:space-y-6 z-10"
+        className="w-full max-w-md flex flex-col items-center space-y-3.5 sm:space-y-5 z-10"
       >
-        {/* Header Tag */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full sticky-note-yellow text-ink font-black text-[11px] sm:text-xs uppercase tracking-wider -rotate-1 shadow-[2px_2px_0px_#2a2440]">
-          <PaperClip className="w-3.5 h-3.5 text-ink" />
-          <GraduationCap className="w-3.5 h-3.5 text-ink" />
-          <span>Teachers' Day Quiz</span>
+        {/* Header Tags & YENTECH Club Branding */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full sticky-note-yellow text-ink font-black text-[11px] sm:text-xs uppercase tracking-wider -rotate-1 shadow-[2px_2px_0px_#2a2440]">
+            <PaperClip className="w-3.5 h-3.5 text-ink" />
+            <GraduationCap className="w-3.5 h-3.5 text-ink" />
+            <span>Teachers' Day Quiz</span>
+          </div>
+          <YentechBranding />
         </div>
 
         {/* Title */}
@@ -126,6 +130,9 @@ export default function HomePage() {
             — {quote.author}
           </p>
         </div>
+
+        {/* YENTECH Official Student Club Footer Credit */}
+        <YentechFooterCredit />
       </motion.div>
     </main>
   )
