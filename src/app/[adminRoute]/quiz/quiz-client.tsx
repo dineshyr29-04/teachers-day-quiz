@@ -98,10 +98,10 @@ export function AdminQuizClient() {
           />
         </div>
 
-        {/* Default Timer */}
+        {/* Global Question Timer */}
         <div className="space-y-2">
           <label className="block text-xs font-black uppercase text-ink-soft">
-            Default Question Timer
+            Question Timer Duration (Applies to all questions)
           </label>
           <div className="flex flex-wrap gap-2">
             {TIMER_CHOICES.map((sec) => (
@@ -119,16 +119,9 @@ export function AdminQuizClient() {
               </button>
             ))}
           </div>
-
-          <label className="flex items-center gap-2 pt-1.5 cursor-pointer text-xs font-bold text-ink">
-            <input
-              type="checkbox"
-              checked={applyToAll}
-              onChange={(e) => setApplyToAll(e.target.checked)}
-              className="w-4 h-4 rounded border-2 border-ink text-[#7b1fa2] focus:ring-0 cursor-pointer"
-            />
-            <span>Apply this timer duration ({defaultTimer}s) to all existing questions</span>
-          </label>
+          <p className="text-[11px] font-bold text-ink-soft pt-0.5">
+            Every question in the quiz will give participants {defaultTimer} seconds to answer.
+          </p>
         </div>
 
         {/* Transition Durations */}

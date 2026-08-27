@@ -585,14 +585,9 @@ class QuizEngine {
     }
   }
 
-  /** The longest authored timer in the pool: the shared round window. */
+  /** The global authored question timer for the quiz: the shared round window. */
   private maxLimitMs() {
-    let max = 0
-    for (const id of this.pool) {
-      const q = this.questions.get(id)
-      if (q) max = Math.max(max, q.timerSeconds * 1000)
-    }
-    return max || 20_000
+    return (this.quiz.defaultTimer || 20) * 1000
   }
 
   private beginQuestion(round: number) {
@@ -685,7 +680,7 @@ class QuizEngine {
     const now = Date.now()
     if (now < this.answersOpenAt - SUBMIT_GRACE_MS) return { ok: false, reason: 'NOT_OPEN' }
 
-    const limitMs = question.timerSeconds * 1000
+    const limitMs = (this.quiz.defaultTimer || 20) * 1000
     const elapsedRaw = now - this.answersOpenAt
     // Refreshing the page cannot buy extra time: the deadline is absolute and
     // measured on the server, not from when this client rendered the question.
@@ -696,7 +691,7 @@ class QuizEngine {
     const points = scoreAnswer({
       correct,
       elapsedMs,
-      limitSeconds: question.timerSeconds,
+      limitSeconds: this.quiz.defaultTimer || 20,
     })
 
     const answer: StoredAnswer = {
@@ -845,7 +840,7 @@ class QuizEngine {
       prompt: q.prompt,
       options: q.options,
       imageUrl: q.imageId ? `/api/image/${q.imageId}` : null,
-      timerSeconds: q.timerSeconds,
+      timerSeconds: this.quiz.defaultTimer || 20,
     }
   }
 
@@ -896,7 +891,7 @@ class QuizEngine {
         state.question = {
           question: payload,
           answersOpenAt: this.answersOpenAt,
-          answersCloseAt: this.answersOpenAt + q.timerSeconds * 1000,
+          answersCloseAt: this.answersOpenAt + (this.quiz.defaultTimer || 20) * 1000,
           yourChoice: p.answers.get(q.id)?.choice ?? null,
         }
       }
