@@ -187,7 +187,7 @@ export function QuestionEditor({
     try {
       setUploadingImage(true)
       const formData = new FormData()
-      formData.append('image', file)
+      formData.append('file', file)
 
       const res = await fetch('/api/admin/upload', {
         method: 'POST',
@@ -208,6 +208,11 @@ export function QuestionEditor({
     if (!editingQuestion) return
     if (!editingQuestion.prompt?.trim()) {
       alert('Question prompt is required')
+      return
+    }
+
+    if (editingQuestion.type === 'IMAGE' && !editingQuestion.imageId) {
+      alert('Please upload an image for this Image Question')
       return
     }
 
@@ -377,31 +382,63 @@ export function QuestionEditor({
                 ))}
               </div>
 
-              {/* Image Upload */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-black uppercase text-ink tracking-wider">
-                  Question Image (Optional)
-                </label>
-                <div className="flex items-center gap-3">
-                  <label className="px-4 py-2.5 rounded-xl border-2 border-ink sticky-note-lavender text-ink text-xs font-black flex items-center gap-2 hover:-translate-y-0.5 transition-all cursor-pointer shadow-[2px_2px_0px_#2a2440]">
-                    <ImageIcon className="w-4 h-4" />
-                    <span>{uploadingImage ? 'Uploading...' : 'Choose Image'}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      disabled={uploadingImage}
-                      className="hidden"
-                    />
+              {/* Image Upload - Only for IMAGE question type */}
+              {editingQuestion.type === 'IMAGE' && (
+                <div className="space-y-2.5 p-3.5 rounded-xl border-2 border-ink sticky-note-yellow">
+                  <label className="block text-xs font-black uppercase text-ink tracking-wider">
+                    Question Image (Required for Image Question)
                   </label>
 
-                  {editingQuestion.imageId && (
-                    <span className="text-xs font-black text-[#388e3c] bg-paper-cream px-2.5 py-1 rounded-lg border border-ink">
-                      Image Attached ✓
-                    </span>
+                  {editingQuestion.imageId ? (
+                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                      <div className="w-32 h-24 relative rounded-lg border-2 border-ink overflow-hidden bg-white shrink-0 shadow-[2px_2px_0px_#2a2440]">
+                        {/* eslint-disable-next-html-element-suppression */}
+                        <img
+                          src={`/api/image/${editingQuestion.imageId}`}
+                          alt="Uploaded question illustration"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <label className="px-3.5 py-1.5 rounded-xl border-2 border-ink bg-paper-cream text-ink text-xs font-black flex items-center gap-1.5 hover:bg-paper-light cursor-pointer shadow-[1.5px_1.5px_0px_#2a2440]">
+                          <ImageIcon className="w-4 h-4" />
+                          <span>{uploadingImage ? 'Uploading...' : 'Replace Image'}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            disabled={uploadingImage}
+                            className="hidden"
+                          />
+                        </label>
+
+                        <button
+                          type="button"
+                          onClick={() => setEditingQuestion((prev) => (prev ? { ...prev, imageId: null } : null))}
+                          className="px-3.5 py-1.5 rounded-xl border-2 border-ink sticky-note-rose text-ink text-xs font-black hover:bg-rose-tint cursor-pointer shadow-[1.5px_1.5px_0px_#2a2440]"
+                        >
+                          Remove Image
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      <label className="px-4 py-2.5 rounded-xl border-2 border-ink sticky-note-lavender text-ink text-xs font-black flex items-center gap-2 hover:-translate-y-0.5 transition-all cursor-pointer shadow-[2px_2px_0px_#2a2440]">
+                        <ImageIcon className="w-4 h-4" />
+                        <span>{uploadingImage ? 'Uploading Image...' : 'Choose Question Image'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          disabled={uploadingImage}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
                   )}
                 </div>
-              </div>
+              )}
 
               {/* Explanation */}
               <div className="space-y-1.5">

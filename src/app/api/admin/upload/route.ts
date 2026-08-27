@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     return fail('Could not read the upload.')
   }
 
-  const file = form.get('file')
+  const file = form.get('file') || form.get('image')
   if (!(file instanceof File)) return fail('Choose an image file.')
   if (file.size === 0) return fail('That file is empty.')
   if (file.size > MAX_BYTES) return fail('Images must be 4 MB or smaller.')
