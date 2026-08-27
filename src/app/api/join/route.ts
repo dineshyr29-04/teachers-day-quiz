@@ -8,7 +8,8 @@ export const runtime = 'nodejs'
 
 /** Register a participant. No account, no email -- just a display name. */
 export async function POST(req: NextRequest) {
-  if (!rateLimit(`join:${clientIp(req)}`, 20, 60_000)) {
+  // Relax rate limit for large campus NAT / Wi-Fi deployment (up to 3,000 joins per minute per IP)
+  if (!rateLimit(`join:${clientIp(req)}`, 3000, 60_000)) {
     return fail('Too many attempts. Please wait a moment and try again.', 429)
   }
 

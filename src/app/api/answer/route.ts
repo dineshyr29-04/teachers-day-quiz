@@ -10,7 +10,8 @@ export const runtime = 'nodejs'
  * server decides when it arrived, whether it counts, and what it is worth.
  */
 export async function POST(req: NextRequest) {
-  if (!rateLimit(`answer:${clientIp(req)}`, 240, 60_000)) {
+  // Relax rate limit for large campus NAT / Wi-Fi deployment (up to 5,000 answer submissions per minute per IP)
+  if (!rateLimit(`answer:${clientIp(req)}`, 5000, 60_000)) {
     return fail('Too many requests.', 429)
   }
 
@@ -28,9 +29,6 @@ export async function POST(req: NextRequest) {
 
   if (result.ok) return ok({ accepted: true })
 
-  // Duplicates are the common case (a double tap on a laggy connection), and
-  // they are not an error from the participant's point of view: the first tap
-  // already counted, so report success and echo what was recorded.
   if (result.reason === 'DUPLICATE') {
     return ok({ accepted: true, duplicate: true, choice: result.choice })
   }
