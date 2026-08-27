@@ -68,7 +68,7 @@ export function appOrigin(req: NextRequest): string {
   if (configured) return configured.replace(/\/$/, '')
 
   const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host')
-  const proto = req.headers.get('x-forwarded-proto') ?? 'http'
+  const proto = req.headers.get('x-forwarded-proto') || (process.env.VERCEL ? 'https' : 'http')
   if (host) return `${proto}://${host}`
   return new URL(req.url).origin
 }

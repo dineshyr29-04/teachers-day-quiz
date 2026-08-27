@@ -295,3 +295,12 @@ export function SpiralBinder(props: IconProps) {
     </Svg>
   )
 }
+
+export function PencilScribble(props: IconProps) {
+  return (
+    <Svg strokeWidth={2.2} {...props}>
+      <path d="M2 12c3-4 6 4 9 0s6 4 9 0 3-2 3-2" strokeDasharray="1 2" />
+      <path d="M4 16c2-2 4 2 6 0s4 2 6 0" />
+    </Svg>
+  )
+}
