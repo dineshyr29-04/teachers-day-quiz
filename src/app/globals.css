@@ -110,13 +110,28 @@
 }
 
 @layer utilities {
-  /* Lined Notebook Paper Background with Left Red Margin */
+  /* Lined Notebook Paper Background with Left Red Margin and Mobile Safe Area Support */
   .notebook-paper {
     background-color: var(--color-paper-cream);
     background-image: 
       linear-gradient(90deg, transparent 48px, rgba(229, 57, 53, 0.35) 48px, rgba(229, 57, 53, 0.35) 50px, transparent 50px),
       linear-gradient(to bottom, transparent 31px, rgba(63, 116, 192, 0.15) 31px, rgba(63, 116, 192, 0.15) 32px);
     background-size: 100% 100%, 100% 32px;
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .min-h-dvh {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   /* Notebook Card: Solid paper fill, dark ink border, offset paper drop shadow */

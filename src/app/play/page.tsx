@@ -90,7 +90,7 @@ export default function PlayPage() {
   const phase = state?.phase || 'WAITING'
 
   return (
-    <main className="min-h-screen notebook-paper flex flex-col items-center justify-start py-4 px-2 sm:px-4 select-none relative overflow-hidden">
+    <main className="min-h-dvh notebook-paper flex flex-col items-center justify-start py-4 px-2 sm:px-4 pb-safe select-none relative overflow-hidden">
       {/* Consistent Notebook Background Geometry */}
       <NotebookBackgroundDecor />
 

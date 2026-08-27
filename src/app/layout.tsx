@@ -25,7 +25,8 @@ export const viewport: Viewport = {
   themeColor: '#FFFBF5',
   width: 'device-width',
   initialScale: 1,
-  // Zoom stays available: never trade accessibility for a tidier layout.
+  maximumScale: 1,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
