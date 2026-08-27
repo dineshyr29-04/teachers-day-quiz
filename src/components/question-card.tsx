@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { PublicQuestion, SelfState } from '@/lib/types'
 import { Timer } from '@/components/timer'
 import { AnswerButton } from '@/components/answer-button'
@@ -32,6 +32,12 @@ export function QuestionCard({
 }: QuestionCardProps) {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(yourChoice)
   const isLocked = selectedChoice !== null
+
+  useEffect(() => {
+    if (yourChoice !== null) {
+      setSelectedChoice(yourChoice)
+    }
+  }, [yourChoice])
 
   const handleChoice = (index: number) => {
     if (isLocked) return

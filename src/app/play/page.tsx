@@ -64,12 +64,15 @@ export default function PlayPage() {
   const handleSelectAnswer = async (choiceIndex: number) => {
     if (!session?.participantId || !state?.question) return
     try {
-      await apiPost('/api/answer', {
+      const res = await apiPost<{ accepted: boolean; reason?: string }>('/api/answer', {
         participantId: session.participantId,
         questionId: state.question.question.id,
         roundIndex: state.roundIndex,
         choice: choiceIndex,
       })
+      if (res && res.accepted === false && res.reason !== 'DUPLICATE') {
+        console.warn('Answer submission rejected by server:', res.reason)
+      }
     } catch {
       /* answer handling is server-authoritative */
     }

@@ -10,8 +10,8 @@
 
 export const MAX_POINTS = 1000
 
-/** Small allowance for network latency when validating a submission. */
-export const SUBMIT_GRACE_MS = 500
+/** Allowance for network latency when validating a submission. */
+export const SUBMIT_GRACE_MS = 2500
 
 export function scoreAnswer(opts: {
   correct: boolean

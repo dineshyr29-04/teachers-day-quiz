@@ -594,12 +594,11 @@ class QuizEngine {
   private beginQuestion(round: number) {
     this.flushAnswers()
     const now = Date.now()
-    const readyMs = Math.max(0, this.quiz.readySeconds * 1000)
 
     this.phase = 'QUESTION'
     this.roundIndex = round
     this.phaseStartedAt = now
-    this.answersOpenAt = now + readyMs
+    this.answersOpenAt = now
     this.phaseEndsAt = this.answersOpenAt + this.maxLimitMs()
 
     this.roundAnswered = 0
@@ -679,15 +678,13 @@ class QuizEngine {
     }
 
     const now = Date.now()
-    if (now < this.answersOpenAt - SUBMIT_GRACE_MS) return { ok: false, reason: 'NOT_OPEN' }
-
     const limitMs = (this.quiz.defaultTimer || 20) * 1000
-    const elapsedRaw = now - this.answersOpenAt
-    // Refreshing the page cannot buy extra time: the deadline is absolute and
-    // measured on the server, not from when this client rendered the question.
+    const elapsedRaw = Math.max(0, now - this.phaseStartedAt)
+
+    // Grace period for network latency when validating a submission
     if (elapsedRaw > limitMs + SUBMIT_GRACE_MS) return { ok: false, reason: 'EXPIRED' }
 
-    const elapsedMs = Math.min(Math.max(elapsedRaw, 0), limitMs)
+    const elapsedMs = Math.min(Math.max(now - this.answersOpenAt, 0), limitMs)
     const correct = choice === question.correctIndex
     const points = scoreAnswer({
       correct,
