@@ -3,6 +3,7 @@
 import { useQuizStream } from '@/lib/client/use-stream'
 import { LeaderboardView } from '@/components/leaderboard-view'
 import { GraduationCap, QrFrame, PaperClip } from '@/components/icons'
+import { NotebookBackgroundDecor } from '@/components/notebook-background-decor'
 import { useState } from 'react'
 import { QrModal } from '@/components/qr-modal'
 
@@ -14,11 +15,14 @@ export default function LeaderboardPage() {
   const totalPlayers = state?.players ?? players
 
   return (
-    <main className="min-h-screen notebook-paper flex flex-col justify-between p-4 sm:p-8 select-none">
+    <main className="min-h-screen notebook-paper flex flex-col justify-between p-4 sm:p-8 select-none relative overflow-hidden">
+      {/* Consistent Notebook Background Geometry */}
+      <NotebookBackgroundDecor />
+
       {/* Top Header */}
-      <header className="w-full max-w-6xl mx-auto flex items-center justify-between gap-4">
+      <header className="w-full max-w-6xl mx-auto flex items-center justify-between gap-4 z-10">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl sticky-note-yellow flex items-center justify-center border-2 border-ink -rotate-3">
+          <div className="w-11 h-11 rounded-2xl sticky-note-yellow flex items-center justify-center border-2 border-ink -rotate-3 shadow-[2px_2px_0px_#2a2440]">
             <GraduationCap className="w-6 h-6 text-ink" />
           </div>
           <div>
@@ -44,7 +48,7 @@ export default function LeaderboardPage() {
       </header>
 
       {/* Main Leaderboard Display */}
-      <div className="w-full max-w-5xl mx-auto my-auto py-6 sm:py-8">
+      <div className="w-full max-w-5xl mx-auto my-auto py-6 sm:py-8 z-10">
         <LeaderboardView
           top={top}
           totalPlayers={totalPlayers}
@@ -53,7 +57,7 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Footer Banner */}
-      <footer className="w-full max-w-6xl mx-auto flex items-center justify-between text-xs sm:text-sm text-ink font-black border-t-2 border-ink pt-4">
+      <footer className="w-full max-w-6xl mx-auto flex items-center justify-between text-xs sm:text-sm text-ink font-black border-t-2 border-ink pt-4 z-10">
         <span>Happy Teachers' Day 🎓</span>
         <span className="tnum font-black text-[#7b1fa2]">
           {totalPlayers} Participants Online

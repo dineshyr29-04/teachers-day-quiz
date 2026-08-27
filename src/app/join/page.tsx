@@ -6,6 +6,7 @@ import { saveSession, loadSession } from '@/lib/client/idb'
 import { apiPost } from '@/lib/client/api'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { GraduationCap, ArrowUp, PaperClip } from '@/components/icons'
+import { NotebookBackgroundDecor } from '@/components/notebook-background-decor'
 import { motion } from 'framer-motion'
 
 export default function JoinPage() {
@@ -61,16 +62,20 @@ export default function JoinPage() {
   }
 
   return (
-    <main className="min-h-screen notebook-paper flex flex-col items-center justify-center p-4 select-none">
+    <main className="min-h-screen notebook-paper flex flex-col items-center justify-center p-4 select-none relative overflow-hidden">
+      {/* Consistent Notebook Background Geometry */}
+      <NotebookBackgroundDecor />
+
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md flex flex-col items-center space-y-6 text-center"
+        className="w-full max-w-md flex flex-col items-center space-y-6 text-center z-10"
       >
         {/* Header Branding */}
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full sticky-note-yellow font-black text-xs uppercase tracking-wider -rotate-1">
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full sticky-note-yellow text-ink font-black text-xs uppercase tracking-wider -rotate-1 shadow-[2.5px_2.5px_0px_#2a2440]">
             <PaperClip className="w-4 h-4 text-ink" />
+            <GraduationCap className="w-4 h-4 text-ink" />
             <span>Teachers' Day Quiz</span>
           </div>
           <h1 className="text-3xl font-black text-ink">
@@ -82,7 +87,7 @@ export default function JoinPage() {
         </div>
 
         {/* Join Card */}
-        <div className="w-full notebook-card p-6 sm:p-8 space-y-6">
+        <div className="w-full notebook-card p-6 sm:p-8 space-y-6 bg-[#fffdf7]">
           {/* Avatar Preview */}
           <div className="flex flex-col items-center space-y-2">
             <ParticipantAvatar seed={previewSeed} size="xl" className="shadow-[3px_3px_0px_#2a2440] border-2 border-ink" />
@@ -107,12 +112,12 @@ export default function JoinPage() {
                 placeholder="Enter your name"
                 maxLength={32}
                 autoFocus
-                className="w-full px-4 py-3.5 rounded-xl border-2 border-ink bg-paper-cream text-ink font-extrabold text-base focus:outline-hidden focus:ring-3 focus:ring-[#7b1fa2] transition-all placeholder:text-ink-faint"
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-ink bg-paper-cream text-ink font-extrabold text-base focus:outline-hidden focus:ring-3 focus:ring-[#7b1fa2] transition-all placeholder:text-ink-faint shadow-[2px_2px_0px_#2a2440]"
               />
             </div>
 
             {error && (
-              <div className="text-xs font-black text-ink sticky-note-rose p-3 rounded-xl">
+              <div className="text-xs font-black text-ink sticky-note-rose p-3 rounded-xl border border-ink shadow-[2px_2px_0px_#2a2440]">
                 {error}
               </div>
             )}

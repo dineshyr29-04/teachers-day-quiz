@@ -10,6 +10,7 @@ import { QuestionCard } from '@/components/question-card'
 import { RevealView } from '@/components/reveal-view'
 import { LeaderboardView } from '@/components/leaderboard-view'
 import { GraduationCap, PaperClip } from '@/components/icons'
+import { NotebookBackgroundDecor } from '@/components/notebook-background-decor'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function PlayPage() {
@@ -27,12 +28,10 @@ export default function PlayPage() {
           return
         }
 
-        // Verify session against server before connecting stream
         try {
           await apiGet(`/api/me?pid=${encodeURIComponent(s.participantId)}`)
           if (active) setSession(s)
         } catch {
-          // Session expired or unknown participant (server restarted / run cleared)
           await clearSession()
           if (active) router.replace('/join')
         }
@@ -78,8 +77,9 @@ export default function PlayPage() {
 
   if (loadingSession || !session) {
     return (
-      <main className="min-h-screen notebook-paper flex items-center justify-center p-4 select-none">
-        <div className="flex flex-col items-center gap-3 text-ink">
+      <main className="min-h-screen notebook-paper flex items-center justify-center p-4 select-none relative overflow-hidden">
+        <NotebookBackgroundDecor />
+        <div className="flex flex-col items-center gap-3 text-ink z-10">
           <GraduationCap className="w-10 h-10 text-[#7b1fa2] animate-bounce" />
           <span className="text-sm font-black">Loading your session...</span>
         </div>
@@ -90,11 +90,14 @@ export default function PlayPage() {
   const phase = state?.phase || 'WAITING'
 
   return (
-    <main className="min-h-screen notebook-paper flex flex-col items-center justify-start py-4 px-2 sm:px-4 select-none">
+    <main className="min-h-screen notebook-paper flex flex-col items-center justify-start py-4 px-2 sm:px-4 select-none relative overflow-hidden">
+      {/* Consistent Notebook Background Geometry */}
+      <NotebookBackgroundDecor />
+
       {/* Top Navbar Header */}
-      <header className="w-full max-w-2xl flex items-center justify-between py-2 px-3 mb-2">
+      <header className="w-full max-w-2xl flex items-center justify-between py-2 px-3 mb-2 z-10">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl sticky-note-yellow flex items-center justify-center border-2 border-ink -rotate-3">
+          <div className="w-8 h-8 rounded-xl sticky-note-yellow flex items-center justify-center border-2 border-ink -rotate-3 shadow-[2px_2px_0px_#2a2440]">
             <GraduationCap className="w-5 h-5 text-ink" />
           </div>
           <div className="flex items-center gap-1.5 font-black text-ink text-sm sm:text-base">
@@ -106,7 +109,7 @@ export default function PlayPage() {
         {/* Status Indicator */}
         <div className="flex items-center gap-2">
           {status === 'reconnecting' && (
-            <span className="px-3 py-1 rounded-full sticky-note-rose text-ink font-black text-xs animate-pulse">
+            <span className="px-3 py-1 rounded-full sticky-note-rose text-ink font-black text-xs border border-ink shadow-[2px_2px_0px_#2a2440] animate-pulse">
               Reconnecting...
             </span>
           )}
@@ -114,7 +117,7 @@ export default function PlayPage() {
       </header>
 
       {/* Main Gameplay Screen Content based on phase */}
-      <div className="w-full max-w-2xl flex-1 flex flex-col justify-center">
+      <div className="w-full max-w-2xl flex-1 flex flex-col justify-center z-10">
         <AnimatePresence mode="wait">
           {phase === 'WAITING' && (
             <motion.div
