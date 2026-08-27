@@ -114,11 +114,19 @@
   .notebook-paper {
     background-color: var(--color-paper-cream);
     background-image: 
-      linear-gradient(90deg, transparent 48px, rgba(229, 57, 53, 0.35) 48px, rgba(229, 57, 53, 0.35) 50px, transparent 50px),
+      linear-gradient(90deg, transparent 22px, rgba(229, 57, 53, 0.35) 22px, rgba(229, 57, 53, 0.35) 24px, transparent 24px),
       linear-gradient(to bottom, transparent 31px, rgba(63, 116, 192, 0.15) 31px, rgba(63, 116, 192, 0.15) 32px);
     background-size: 100% 100%, 100% 32px;
     padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
     padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  @media (min-width: 640px) {
+    .notebook-paper {
+      background-image: 
+        linear-gradient(90deg, transparent 48px, rgba(229, 57, 53, 0.35) 48px, rgba(229, 57, 53, 0.35) 50px, transparent 50px),
+        linear-gradient(to bottom, transparent 31px, rgba(63, 116, 192, 0.15) 31px, rgba(63, 116, 192, 0.15) 32px);
+    }
   }
 
   .pb-safe {

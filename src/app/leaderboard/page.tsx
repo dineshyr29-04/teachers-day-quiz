@@ -15,7 +15,7 @@ export default function LeaderboardPage() {
   const totalPlayers = state?.players ?? players
 
   return (
-    <main className="min-h-dvh notebook-paper flex flex-col justify-between p-4 sm:p-8 pb-safe select-none relative overflow-hidden">
+    <main className="min-h-dvh notebook-paper flex flex-col justify-between pl-7 pr-3 py-4 sm:p-8 pb-safe select-none relative overflow-hidden">
       {/* Consistent Notebook Background Geometry */}
       <NotebookBackgroundDecor />
 

@@ -62,7 +62,7 @@ export default function JoinPage() {
   }
 
   return (
-    <main className="min-h-dvh notebook-paper flex flex-col items-center justify-center p-4 pb-safe select-none relative overflow-hidden">
+    <main className="min-h-dvh notebook-paper flex flex-col items-center justify-center pl-7 pr-3 sm:px-6 py-4 pb-safe select-none relative overflow-hidden">
       {/* Consistent Notebook Background Geometry */}
       <NotebookBackgroundDecor />
 
