@@ -45,7 +45,7 @@ export default function PlayPage() {
     }
   }, [router])
 
-  const { state, status, players, clockOffset } = useQuizStream({
+  const { state, status, showReconnecting, players, clockOffset } = useQuizStream({
     participantId: session?.participantId,
   })
 
@@ -111,7 +111,7 @@ export default function PlayPage() {
 
         {/* Status Indicator */}
         <div className="flex items-center gap-2">
-          {status === 'reconnecting' && (
+          {showReconnecting && status === 'reconnecting' && (
             <span className="px-3 py-1 rounded-full sticky-note-rose text-ink font-black text-xs border border-ink shadow-[2px_2px_0px_#2a2440] animate-pulse">
               Reconnecting...
             </span>

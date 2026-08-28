@@ -14,6 +14,7 @@ interface Options {
 export function useQuizStream({ participantId, display }: Options) {
   const [state, setState] = useState<ClientState | null>(null)
   const [status, setStatus] = useState<StreamStatus>('connecting')
+  const [showReconnecting, setShowReconnecting] = useState(false)
   const [players, setPlayers] = useState(0)
 
   // Positive when the server clock is ahead of this device.
@@ -25,18 +26,53 @@ export function useQuizStream({ participantId, display }: Options) {
     const url = display ? '/api/stream?role=display' : `/api/stream?pid=${encodeURIComponent(participantId!)}`
     const source = new EventSource(url)
     let cancelled = false
+    let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+    let pollInterval: ReturnType<typeof setInterval> | null = null
+
+    const fetchFallbackState = async () => {
+      if (display || !participantId || cancelled) return
+      try {
+        const res = await fetch(`/api/me?pid=${encodeURIComponent(participantId)}`, {
+          cache: 'no-store',
+        })
+        if (res.status === 404 && !cancelled) {
+          setStatus('invalid')
+          source.close()
+          return
+        }
+        if (res.ok && !cancelled) {
+          const data = await res.json()
+          if (data?.state) {
+            clockOffset.current = data.state.serverNow - Date.now()
+            setPlayers(data.state.players || 0)
+            setState(data.state)
+          }
+        }
+      } catch {
+        /* offline -- keep retrying */
+      }
+    }
 
     source.onopen = () => {
       if (cancelled) return
       setStatus('open')
+      setShowReconnecting(false)
+      if (reconnectTimer) clearTimeout(reconnectTimer)
+      if (pollInterval) clearInterval(pollInterval)
     }
 
     source.onmessage = (event) => {
       if (cancelled) return
-      let frame: ClientState | { t: 'players'; players: number }
+      let frame: ClientState | { t: 'players'; players: number } | { t: 'invalid' }
       try {
         frame = JSON.parse(event.data)
       } catch {
+        return
+      }
+
+      if ('t' in frame && frame.t === 'invalid') {
+        setStatus('invalid')
+        source.close()
         return
       }
 
@@ -56,29 +92,31 @@ export function useQuizStream({ participantId, display }: Options) {
       if (cancelled) return
       setStatus('reconnecting')
 
-      // Check immediately whether the participant session is invalid (e.g. server restarted or run cleared)
-      if (!display && participantId) {
-        try {
-          const res = await fetch(`/api/me?pid=${encodeURIComponent(participantId)}`, {
-            cache: 'no-store',
-          })
-          if (res.status === 404 && !cancelled) {
-            setStatus('invalid')
-            source.close()
-          }
-        } catch {
-          /* offline -- keep retrying */
-        }
+      // Delay showing the "Reconnecting..." badge by 3.5s so brief SSE reconnections don't flash warnings
+      if (!reconnectTimer) {
+        reconnectTimer = setTimeout(() => {
+          if (!cancelled) setShowReconnecting(true)
+        }, 3500)
+      }
+
+      // Immediately fetch current state via fallback REST endpoint
+      fetchFallbackState()
+
+      // Start periodic fallback polling every 3s while SSE is reconnecting
+      if (!pollInterval) {
+        pollInterval = setInterval(fetchFallbackState, 3000)
       }
     }
 
     return () => {
       cancelled = true
+      if (reconnectTimer) clearTimeout(reconnectTimer)
+      if (pollInterval) clearInterval(pollInterval)
       source.close()
     }
   }, [participantId, display])
 
-  return { state, status, players, clockOffset }
+  return { state, status, showReconnecting, players, clockOffset }
 }
 
 /** The same subscription for the authenticated host screen. */
@@ -96,9 +134,36 @@ export function useHostStream() {
   useEffect(() => {
     const source = new EventSource('/api/admin/stream')
     let cancelled = false
+    let pollInterval: ReturnType<typeof setInterval> | null = null
 
-    source.onopen = () => !cancelled && setStatus('open')
-    source.onerror = () => !cancelled && setStatus('reconnecting')
+    const fetchHostFallback = async () => {
+      if (cancelled) return
+      try {
+        const res = await fetch('/api/admin/stream', { cache: 'no-store' })
+        if (res.ok && !cancelled) {
+          const data = await res.json()
+          if (data) {
+            clockOffset.current = (data.serverNow || Date.now()) - Date.now()
+            setSnapshot(data)
+          }
+        }
+      } catch {}
+    }
+
+    source.onopen = () => {
+      if (cancelled) return
+      setStatus('open')
+      if (pollInterval) clearInterval(pollInterval)
+    }
+
+    source.onerror = () => {
+      if (cancelled) return
+      setStatus('reconnecting')
+      fetchHostFallback()
+      if (!pollInterval) {
+        pollInterval = setInterval(fetchHostFallback, 3000)
+      }
+    }
 
     source.onmessage = (event) => {
       if (cancelled) return
@@ -125,6 +190,7 @@ export function useHostStream() {
 
     return () => {
       cancelled = true
+      if (pollInterval) clearInterval(pollInterval)
       source.close()
     }
   }, [])
