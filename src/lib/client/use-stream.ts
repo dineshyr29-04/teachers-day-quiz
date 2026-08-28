@@ -27,15 +27,19 @@ export function useQuizStream({ participantId, display }: Options) {
     const source = new EventSource(url)
     let cancelled = false
     let reconnectTimer: ReturnType<typeof setTimeout> | null = null
-    let pollInterval: ReturnType<typeof setInterval> | null = null
 
     const fetchFallbackState = async () => {
-      if (display || !participantId || cancelled) return
+      if (cancelled) return
       try {
-        const res = await fetch(`/api/me?pid=${encodeURIComponent(participantId)}`, {
-          cache: 'no-store',
-        })
-        if (res.status === 404 && !cancelled) {
+        const fetchUrl = display
+          ? '/api/me?role=display'
+          : participantId
+          ? `/api/me?pid=${encodeURIComponent(participantId)}`
+          : null
+        if (!fetchUrl) return
+
+        const res = await fetch(fetchUrl, { cache: 'no-store' })
+        if (res.status === 404 && !cancelled && !display) {
           setStatus('invalid')
           source.close()
           return
@@ -53,12 +57,15 @@ export function useQuizStream({ participantId, display }: Options) {
       }
     }
 
+    // Immediately fetch state once on mount and maintain a 1000ms heartbeat poll for guaranteed sync
+    fetchFallbackState()
+    const pollInterval = setInterval(fetchFallbackState, 1000)
+
     source.onopen = () => {
       if (cancelled) return
       setStatus('open')
       setShowReconnecting(false)
       if (reconnectTimer) clearTimeout(reconnectTimer)
-      if (pollInterval) clearInterval(pollInterval)
     }
 
     source.onmessage = (event) => {
@@ -92,26 +99,19 @@ export function useQuizStream({ participantId, display }: Options) {
       if (cancelled) return
       setStatus('reconnecting')
 
-      // Delay showing the "Reconnecting..." badge by 3.5s so brief SSE reconnections don't flash warnings
       if (!reconnectTimer) {
         reconnectTimer = setTimeout(() => {
           if (!cancelled) setShowReconnecting(true)
         }, 3500)
       }
 
-      // Immediately fetch current state via fallback REST endpoint
       fetchFallbackState()
-
-      // Start periodic fallback polling every 3s while SSE is reconnecting
-      if (!pollInterval) {
-        pollInterval = setInterval(fetchFallbackState, 3000)
-      }
     }
 
     return () => {
       cancelled = true
       if (reconnectTimer) clearTimeout(reconnectTimer)
-      if (pollInterval) clearInterval(pollInterval)
+      clearInterval(pollInterval)
       source.close()
     }
   }, [participantId, display])
@@ -134,7 +134,6 @@ export function useHostStream() {
   useEffect(() => {
     const source = new EventSource('/api/admin/stream')
     let cancelled = false
-    let pollInterval: ReturnType<typeof setInterval> | null = null
 
     const fetchHostFallback = async () => {
       if (cancelled) return
@@ -150,19 +149,19 @@ export function useHostStream() {
       } catch {}
     }
 
+    // Immediately fetch snapshot on mount and maintain a 1000ms polling heartbeat for bulletproof sync
+    fetchHostFallback()
+    const pollInterval = setInterval(fetchHostFallback, 1000)
+
     source.onopen = () => {
       if (cancelled) return
       setStatus('open')
-      if (pollInterval) clearInterval(pollInterval)
     }
 
     source.onerror = () => {
       if (cancelled) return
       setStatus('reconnecting')
       fetchHostFallback()
-      if (!pollInterval) {
-        pollInterval = setInterval(fetchHostFallback, 3000)
-      }
     }
 
     source.onmessage = (event) => {
@@ -192,7 +191,7 @@ export function useHostStream() {
 
     return () => {
       cancelled = true
-      if (pollInterval) clearInterval(pollInterval)
+      clearInterval(pollInterval)
       source.close()
     }
   }, [])

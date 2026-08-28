@@ -41,7 +41,7 @@ import type {
  *   what keeps a single global clock valid despite randomised order.
  */
 
-const LEADERBOARD_SIZE = 10
+const LEADERBOARD_SIZE = 100
 const TALLY_INTERVAL_MS = 1000
 const PLAYER_COUNT_THROTTLE_MS = 750
 const ANSWER_FLUSH_MS = 1000
