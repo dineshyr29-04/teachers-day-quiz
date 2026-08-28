@@ -11,7 +11,7 @@
 
 export type QuestionType = 'MCQ' | 'TRUE_FALSE' | 'IMAGE'
 
-export const TIMER_CHOICES = [10, 15, 20, 30, 45, 60] as const
+export const TIMER_CHOICES = [5, 10, 15, 20, 30, 45, 60] as const
 export type TimerChoice = (typeof TIMER_CHOICES)[number]
 
 export interface Question {

@@ -86,7 +86,7 @@ export function getQuiz(): Quiz {
     `INSERT INTO quizzes
        (id, name, description, default_timer, reveal_seconds,
         leaderboard_seconds, ready_seconds, created_at, updated_at)
-     VALUES (?, ?, ?, 20, 5, 5, 3, ?, ?)`,
+     VALUES (?, ?, ?, 5, 5, 5, 3, ?, ?)`,
   ).run(
     id,
     "Teachers' Day Quiz",
@@ -295,7 +295,7 @@ function seedQuestions(quizId: string) {
       prompt: "When is Teachers' Day celebrated in India?",
       options: ['August 15', 'September 5', 'October 2', 'November 14'],
       correctIndex: 1,
-      timerSeconds: 20,
+      timerSeconds: 5,
       explanation:
         "🎓 Fun Fact: September 5 marks the birthday of Dr. Sarvepalli Radhakrishnan. When his students wanted to celebrate his birthday, he said: 'Instead of celebrating my birthday, it would be my proud privilege if September 5 is observed as Teachers' Day!'",
       imageId: null,
@@ -306,7 +306,7 @@ function seedQuestions(quizId: string) {
         "Teachers' Day in India is celebrated on the birthday of Dr. Sarvepalli Radhakrishnan.",
       options: ['True', 'False'],
       correctIndex: 0,
-      timerSeconds: 20,
+      timerSeconds: 5,
       explanation:
         '🌟 Fun Fact: Dr. Radhakrishnan was a world-renowned scholar and professor at Oxford, Calcutta, and Mysore Universities. He was nominated for the Nobel Prize 27 times during his life!',
       imageId: null,
@@ -316,7 +316,7 @@ function seedQuestions(quizId: string) {
       prompt: 'Which of these qualities makes an inspiring teacher?',
       options: ['Patience', 'Curiosity', 'Empathy', 'All of the above'],
       correctIndex: 3,
-      timerSeconds: 20,
+      timerSeconds: 5,
       explanation:
         "💡 Fun Fact: Patience, Curiosity, and Empathy are known as the Golden Triangle of inspiring teaching. Swami Vivekananda said, 'Education is the manifestation of the perfection already in man.'",
       imageId: null,
@@ -326,7 +326,7 @@ function seedQuestions(quizId: string) {
       prompt: 'What object is commonly associated with a traditional classroom?',
       options: ['Blackboard', 'Football', 'Helmet', 'Guitar'],
       correctIndex: 0,
-      timerSeconds: 20,
+      timerSeconds: 5,
       explanation:
         '✏️ Fun Fact: The blackboard was invented in Scotland in 1801 by James Pillans, who joined small individual slates together so an entire classroom could learn simultaneously!',
       imageId: null,
@@ -341,7 +341,7 @@ function seedQuestions(quizId: string) {
         'First Chief Justice',
       ],
       correctIndex: 2,
-      timerSeconds: 20,
+      timerSeconds: 5,
       explanation:
         '🏆 Fun Fact: Dr. Radhakrishnan was India’s 1st Vice President (1952–1962) and 2nd President (1962–1967). In 1954, he received the Bharat Ratna, India’s highest civilian award.',
       imageId: null,

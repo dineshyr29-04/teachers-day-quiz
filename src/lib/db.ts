@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS quizzes (
   id                  TEXT PRIMARY KEY,
   name                TEXT NOT NULL,
   description         TEXT NOT NULL DEFAULT '',
-  default_timer       INTEGER NOT NULL DEFAULT 20,
+  default_timer       INTEGER NOT NULL DEFAULT 5,
   reveal_seconds      INTEGER NOT NULL DEFAULT 5,
   leaderboard_seconds INTEGER NOT NULL DEFAULT 5,
   ready_seconds       INTEGER NOT NULL DEFAULT 3,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS questions (
   prompt        TEXT NOT NULL,
   options       TEXT NOT NULL,           -- JSON array of strings
   correct_index INTEGER NOT NULL,
-  timer_seconds INTEGER NOT NULL DEFAULT 20,
+  timer_seconds INTEGER NOT NULL DEFAULT 5,
   explanation   TEXT,
   image_id      TEXT REFERENCES images(id) ON DELETE SET NULL,
   position      INTEGER NOT NULL
