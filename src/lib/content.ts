@@ -76,7 +76,7 @@ export function getQuiz(): Quiz {
   const db = getDb()
   const row = db
     .prepare('SELECT * FROM quizzes ORDER BY created_at ASC LIMIT 1')
-    .get() as QuizRow | undefined
+    .get() as unknown as QuizRow | undefined
 
   if (row) return mapQuiz(row)
 
@@ -149,14 +149,14 @@ export function listQuestions(quizId: string): Question[] {
     .prepare(
       'SELECT * FROM questions WHERE quiz_id = ? ORDER BY position ASC, id ASC',
     )
-    .all(quizId) as QuestionRow[]
+    .all(quizId) as unknown as QuestionRow[]
   return rows.map(mapQuestion)
 }
 
 export function getQuestion(id: string): Question | null {
   const row = getDb()
     .prepare('SELECT * FROM questions WHERE id = ?')
-    .get(id) as QuestionRow | undefined
+    .get(id) as unknown as QuestionRow | undefined
   return row ? mapQuestion(row) : null
 }
 
@@ -179,7 +179,7 @@ export function createQuestion(quizId: string, input: QuestionInput): Question {
     .prepare(
       'SELECT COALESCE(MAX(position), -1) AS pos FROM questions WHERE quiz_id = ?',
     )
-    .get(quizId) as { pos: number }
+    .get(quizId) as unknown as { pos: number }
   const id = newId('q')
   db.prepare(
     `INSERT INTO questions
@@ -255,10 +255,14 @@ export function reorderQuestions(quizId: string, orderedIds: string[]) {
   const stmt = db.prepare(
     'UPDATE questions SET position = ? WHERE id = ? AND quiz_id = ?',
   )
-  const run = db.transaction((ids: string[]) => {
-    ids.forEach((id, index) => stmt.run(index, id, quizId))
-  })
-  run(orderedIds)
+  db.exec('BEGIN IMMEDIATE;')
+  try {
+    orderedIds.forEach((id, index) => stmt.run(index, id, quizId))
+    db.exec('COMMIT;')
+  } catch (err) {
+    db.exec('ROLLBACK;')
+    throw err
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -276,7 +280,7 @@ export function saveImage(mime: string, bytes: Buffer): string {
 export function getImage(id: string): { mime: string; bytes: Buffer } | null {
   const row = getDb()
     .prepare('SELECT mime, bytes FROM images WHERE id = ?')
-    .get(id) as { mime: string; bytes: Buffer } | undefined
+    .get(id) as unknown as { mime: string; bytes: Buffer } | undefined
   return row ?? null
 }
 

@@ -759,7 +759,8 @@ class QuizEngine {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     const now = Date.now()
-    const write = db.transaction(() => {
+    try {
+      db.exec('BEGIN IMMEDIATE;')
       for (const item of batch) {
         stmt.run(
           this.runId,
@@ -773,10 +774,9 @@ class QuizEngine {
           now,
         )
       }
-    })
-    try {
-      write()
+      db.exec('COMMIT;')
     } catch (err) {
+      db.exec('ROLLBACK;')
       console.error('[engine] failed to flush answers', err)
     }
   }
