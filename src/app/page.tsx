@@ -50,11 +50,9 @@ const TEACHERS_DAY_QUOTES = [
 ]
 
 export default function HomePage() {
-  const [quote, setQuote] = useState(() => {
-    return TEACHERS_DAY_QUOTES[Math.floor(Math.random() * TEACHERS_DAY_QUOTES.length)]
-  })
+  const [quote, setQuote] = useState(TEACHERS_DAY_QUOTES[0])
 
-  // Pick a fresh random quote on every client mount/refresh
+  // Pick a fresh random quote on client mount after hydration
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * TEACHERS_DAY_QUOTES.length)
     setQuote(TEACHERS_DAY_QUOTES[randomIndex])
