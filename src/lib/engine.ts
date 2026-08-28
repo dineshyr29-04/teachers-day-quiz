@@ -277,6 +277,7 @@ class QuizEngine {
         order: this.orderFor(row.id),
       })
     }
+    this.recomputeRanks()
   }
 
   private loadAnswers() {
@@ -313,6 +314,7 @@ class QuizEngine {
       if (answer.correct) p.correct += 1
       this.bumpDistribution(row.question_id, row.choice)
     }
+    this.recomputeRanks()
   }
 
   private recomputeRoundTallies() {
@@ -967,7 +969,7 @@ class QuizEngine {
   // -------------------------------------------------------------------------
 
   hostSnapshot(): HostSnapshot {
-    if (this.ranked.length !== this.participants.size) this.recomputeRanks()
+    this.recomputeRanks()
 
     let scoreTotal = 0
     let accuracyTotal = 0
