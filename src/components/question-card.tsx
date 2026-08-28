@@ -34,10 +34,8 @@ export function QuestionCard({
   const isLocked = selectedChoice !== null
 
   useEffect(() => {
-    if (yourChoice !== null) {
-      setSelectedChoice(yourChoice)
-    }
-  }, [yourChoice])
+    setSelectedChoice(yourChoice)
+  }, [yourChoice, roundIndex])
 
   const handleChoice = (index: number) => {
     if (isLocked) return
