@@ -457,7 +457,7 @@ class QuizEngine {
       )
       .run(id, this.runId, name, id, now, now)
 
-    this.rankMap.set(id, this.participants.size)
+    this.recomputeRanks()
     this.schedulePlayerCountBroadcast()
     return { id, avatarSeed: id }
   }
@@ -813,7 +813,7 @@ class QuizEngine {
   }
 
   private topEntries(limit = LEADERBOARD_SIZE): LeaderboardEntry[] {
-    if (this.ranked.length === 0) this.recomputeRanks()
+    if (this.ranked.length !== this.participants.size) this.recomputeRanks()
     return this.ranked.slice(0, limit).map((p, i) => this.entry(p, i + 1))
   }
 
@@ -967,7 +967,7 @@ class QuizEngine {
   // -------------------------------------------------------------------------
 
   hostSnapshot(): HostSnapshot {
-    if (this.ranked.length === 0) this.recomputeRanks()
+    if (this.ranked.length !== this.participants.size) this.recomputeRanks()
 
     let scoreTotal = 0
     let accuracyTotal = 0
@@ -1141,8 +1141,7 @@ class QuizEngine {
   }
 
   private emitPlayerCount() {
-    const chunk = frame({ t: 'players', players: this.participants.size })
-    getHub().broadcast(() => chunk)
+    this.broadcastState()
   }
 
   /** While a question runs, host screens get live tallies once a second. */
