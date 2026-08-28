@@ -139,7 +139,7 @@ export function useHostStream() {
     const fetchHostFallback = async () => {
       if (cancelled) return
       try {
-        const res = await fetch('/api/admin/stream', { cache: 'no-store' })
+        const res = await fetch('/api/admin/snapshot', { cache: 'no-store' })
         if (res.ok && !cancelled) {
           const data = await res.json()
           if (data) {
@@ -167,7 +167,7 @@ export function useHostStream() {
 
     source.onmessage = (event) => {
       if (cancelled) return
-      let frame: HostFrame | { t: 'tally'; answered: number; players: number; spread: number[]; perQuestion: { questionId: string; answered: number }[] }
+      let frame: HostFrame | { t: 'tally'; answered: number; players: number; spread: number[]; perQuestion: { questionId: string; answered: number }[] } | { t: 'players'; players: number }
       try {
         frame = JSON.parse(event.data)
       } catch {
@@ -185,6 +185,8 @@ export function useHostStream() {
           spread: frame.spread,
           perQuestion: frame.perQuestion,
         })
+      } else if (frame.t === 'players') {
+        setSnapshot((prev) => (prev ? { ...prev, players: frame.players } : prev))
       }
     }
 
