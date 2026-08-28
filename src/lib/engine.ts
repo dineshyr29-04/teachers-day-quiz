@@ -590,7 +590,7 @@ class QuizEngine {
 
   /** The global authored question timer for the quiz: the shared round window. */
   private maxLimitMs() {
-    return (this.quiz.defaultTimer || 20) * 1000
+    return (this.quiz.defaultTimer || 5) * 1000
   }
 
   private beginQuestion(round: number) {
@@ -680,7 +680,7 @@ class QuizEngine {
     }
 
     const now = Date.now()
-    const limitMs = (this.quiz.defaultTimer || 20) * 1000
+    const limitMs = (this.quiz.defaultTimer || 5) * 1000
     const elapsedRaw = Math.max(0, now - this.phaseStartedAt)
 
     // Grace period for network latency when validating a submission
@@ -691,7 +691,7 @@ class QuizEngine {
     const points = scoreAnswer({
       correct,
       elapsedMs,
-      limitSeconds: this.quiz.defaultTimer || 20,
+      limitSeconds: this.quiz.defaultTimer || 5,
     })
 
     const answer: StoredAnswer = {
@@ -842,7 +842,7 @@ class QuizEngine {
       prompt: q.prompt,
       options: q.options,
       imageUrl: q.imageId ? `/api/image/${q.imageId}` : null,
-      timerSeconds: this.quiz.defaultTimer || 20,
+      timerSeconds: this.quiz.defaultTimer || 5,
     }
   }
 
@@ -893,7 +893,7 @@ class QuizEngine {
         state.question = {
           question: payload,
           answersOpenAt: this.answersOpenAt,
-          answersCloseAt: this.answersOpenAt + (this.quiz.defaultTimer || 20) * 1000,
+          answersCloseAt: this.answersOpenAt + (this.quiz.defaultTimer || 5) * 1000,
           yourChoice: p.answers.get(q.id)?.choice ?? null,
         }
       }

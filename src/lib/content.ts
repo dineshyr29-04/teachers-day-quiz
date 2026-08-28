@@ -74,11 +74,19 @@ function mapQuestion(row: QuestionRow): Question {
  */
 export function getQuiz(): Quiz {
   const db = getDb()
-  const row = db
+  let row = db
     .prepare('SELECT * FROM quizzes ORDER BY created_at ASC LIMIT 1')
     .get() as unknown as QuizRow | undefined
 
-  if (row) return mapQuiz(row)
+  if (row) {
+    if (row.default_timer !== 5 || row.leaderboard_seconds !== 3 || row.reveal_seconds !== 3) {
+      db.prepare(
+        'UPDATE quizzes SET default_timer = 5, reveal_seconds = 3, leaderboard_seconds = 3 WHERE id = ?',
+      ).run(row.id)
+      row = { ...row, default_timer: 5, reveal_seconds: 3, leaderboard_seconds: 3 }
+    }
+    return mapQuiz(row)
+  }
 
   const now = Date.now()
   const id = newId('quiz')
@@ -86,7 +94,7 @@ export function getQuiz(): Quiz {
     `INSERT INTO quizzes
        (id, name, description, default_timer, reveal_seconds,
         leaderboard_seconds, ready_seconds, created_at, updated_at)
-     VALUES (?, ?, ?, 5, 5, 5, 3, ?, ?)`,
+     VALUES (?, ?, ?, 5, 3, 3, 3, ?, ?)`,
   ).run(
     id,
     "Teachers' Day Quiz",
