@@ -807,6 +807,8 @@ class QuizEngine {
       score: p.score,
       rank,
       delta: before === undefined ? null : before - rank,
+      correct: p.correct,
+      answered: p.answered,
     }
   }
 
@@ -998,6 +1000,15 @@ class QuizEngine {
         answered: this.roundPerQuestion.get(id) ?? 0,
       })),
       top: this.topEntries(),
+      allParticipants: this.ranked.map((p, i) => ({
+        id: p.id,
+        name: p.name,
+        avatarSeed: p.avatarSeed,
+        score: p.score,
+        rank: i + 1,
+        correct: p.correct,
+        answered: p.answered,
+      })),
       averageScore: Math.round(scoreTotal / n),
       averageAccuracy: accuracyTotal / n,
     }

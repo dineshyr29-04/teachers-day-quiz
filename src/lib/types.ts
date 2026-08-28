@@ -80,6 +80,8 @@ export interface LeaderboardEntry {
   rank: number
   /** Rank movement since the previous leaderboard. Positive = moved up. */
   delta: number | null
+  correct?: number
+  answered?: number
 }
 
 export interface SelfState {
@@ -216,6 +218,16 @@ export interface ResultsSummary {
 // Host dashboard
 // ---------------------------------------------------------------------------
 
+export interface HostParticipantEntry {
+  id: string
+  name: string
+  avatarSeed: string
+  score: number
+  rank: number
+  correct: number
+  answered: number
+}
+
 export interface HostSnapshot {
   quiz: Quiz
   runId: string
@@ -233,6 +245,7 @@ export interface HostSnapshot {
   spread: number[]
   perQuestion: { questionId: string; prompt: string; answered: number }[]
   top: LeaderboardEntry[]
+  allParticipants?: HostParticipantEntry[]
   averageScore: number
   averageAccuracy: number
 }
