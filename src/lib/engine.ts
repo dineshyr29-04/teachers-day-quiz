@@ -1080,7 +1080,12 @@ class QuizEngine {
       if (client.role === 'player') {
         if (!client.participantId) return null
         const state = this.stateForParticipant(client.participantId, memo)
-        return state ? frame(state) : null
+        if (!state) {
+          client.write(frame({ t: 'invalid', message: 'Session reset by host.' }))
+          client.close()
+          return null
+        }
+        return frame(state)
       }
       if (client.role === 'admin') {
         hostChunk ??= frame({ t: 'host', ...this.hostSnapshot() })
